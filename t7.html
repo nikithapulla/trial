@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>yummpys pe bakchodi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Poppins font */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Simple pulse animation for offers */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        /* Hide scrollbar for cart items */
+        #cart-items-list::-webkit-scrollbar {
+            display: none;
+        }
+        #cart-items-list {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* --- NEW CSS FOR MODAL ANIMATION --- */
+        /* Default state for modal content */
+        #cart-modal-content {
+            transition: transform 0.3s ease-in-out;
+            transform: translateY(100%); /* Default: off-screen bottom */
+        }
+        /* Desktop default state */
+        @media (min-width: 640px) { /* sm breakpoint */
+            #cart-modal-content {
+                transform: translateY(0) scale(0.95); /* Default: centered, shrunk */
+                opacity: 0;
+                transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            }
+        }
+        
+        /* Open state for modal overlay */
+        #cart-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Open state for modal content */
+        #cart-modal.open #cart-modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        /* --- END OF NEW CSS --- */
+
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+
+    <header class="bg-gray-800 shadow-lg sticky top-0 z-40">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-2xl md:text-3xl font-extrabold text-teal-400">
+                <a href="#">yummpys pe bakchodi</a>
+            </h1>
+            
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#menu" class="text-gray-300 hover:text-teal-400 font-semibold">Menu</a>
+                <a href="#offers" class="text-gray-300 hover:text-teal-400 font-semibold">Offers</a>
+                <a href="#activities" class="text-gray-300 hover:text-teal-400 font-semibold">Activities</a>
+            </div>
+            
+            <button id="cart-icon-btn" class="relative p-2 rounded-full text-gray-300 hover:bg-gray-700 focus:outline-none">
+                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.34 1.087-.835l3.879-11.638c.114-.336-.016-.713-.298-.94a.99A.99 0 0021 3H2.25l1.002 4.741c.11.52.562.89 1.087.89h12.162M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.34 1.087-.835l3.879-11.638c.114-.336-.016-.713-.298-.94a.99A.99 0 0021 3H2.25l1.002 4.741c.11.52.562.89 1.087.89h12.162" />
+                </svg>
+                <span id="cart-count" class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <section id="offers" class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-6 text-teal-300">Today's Bakchodi (Offers)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gradient-to-r from-purple-700 to-indigo-700 text-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-2">Noodles + Rice Combo</h3>
+                    <p class="text-lg">Any Noodles + Any Fried Rice for ₹139</p>
+                </div>
+                <div class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-2">Full Meal Deal</h3>
+                    <p class="text-lg">Noodles + Fried Rice + Drink for ₹159</p>
+                </div>
+                <div class="bg-gradient-to-r from-red-600 to-pink-600 text-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-2">Rolls & Dessert</h3>
+                    <p class="text-lg">2 Rolls + Free Chocobar</p>
+                </div>
+                <div class="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-2">Starters Special</h3>
+                    <p class="text-lg">Any 3 Starters + Mojito FREE</p>
+                </div>
+                <div class="bg-gradient-to-r from-yellow-600 to-orange-600 text-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-2">Maggi Madness</h3>
+                    <p class="text-lg">3 Fried Maggi + Drink of your choice FREE</p>
+                </div>
+                <div class="bg-gradient-to-r from-blue-700 to-cyan-700 text-white p-6 rounded-lg shadow-lg md:col-span-2">
+                    <h3 class="text-2xl font-bold mb-2">Ultimate Bakchodi Combo</h3>
+                    <p class="text-lg">Chilli Chicken/Veg Manchurian + (Veg/Chicken Noodles OR Fried Rice) + Drink of your choice</p>
+                </div>
+                <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6 rounded-lg shadow-lg md:col-span-2">
+                    <h3 class="text-2xl font-bold mb-2">Classic Combo</h3>
+                    <p class="text-lg">Chicken Fried Rice + Chilli Chicken</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="menu" class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-8">Our Menu</h2>
+            <div id="menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </section>
+
+        <section id="activities" class="bg-gray-800 p-8 rounded-lg shadow-lg text-center">
+            <h2 class="text-3xl font-bold mb-6">Extra Activities</h2>
+            <p class="text-lg text-gray-300 mb-4">It's not just food, it's a vibe. Join us for:</p>
+            <ul class="space-y-3 text-xl">
+                <li class="font-semibold">🎧 <span class="text-purple-400">DJ Night</span></li>
+                <li class="font-semibold">📸 <span class="text-teal-400">Polaroids</span></li>
+                <li class="font-semibold">🎸 <span class="text-green-400">Jam Session</span></li>
+                <li class="font-semibold">🎨 <span class="text-yellow-400">Scratch Art</span></li>
+                <li class="font-semibold">🎁 <span class="text-pink-400">Freebies!! ( Golden Ticket)</span></li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 text-center p-6 mt-12">
+        <p>&copy; 2025 yummpys pe bakchodi. All rights reserved. (Probably)</p>
+    </footer>
+
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end sm:items-center justify-center p-4 opacity-0 invisible transition-opacity duration-300 ease-in-out">
+        <div id="cart-modal-content" class="bg-gray-800 w-full max-w-md rounded-t-lg sm:rounded-lg shadow-xl overflow-hidden text-gray-100">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h3 class="text-2xl font-bold">Your Cart</h3>
+                <button id="close-cart-btn" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="cart-items-list" class="p-4 max-h-96 overflow-y-auto">
+                </div>
+
+            <div id="gemini-advisor" class="p-4 border-t border-gray-700 hidden">
+                <button id="gemini-btn" class="w-full bg-purple-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300 flex items-center justify-center disabled:opacity-50">
+                    ✨ Get Bakchodi Advisor's Take ✨
+                </button>
+                <div id="gemini-loading" class="mt-4 text-center text-teal-400 hidden">
+                    <p>Consulting the spirits of bakchodi...</p>
+                </div>
+                <div id="gemini-response" class="mt-4 p-3 bg-gray-700 rounded-lg text-gray-300 italic hidden">
+                    </div>
+            </div>
+            
+            <div class="p-4 border-t border-gray-700 bg-gray-800">
+                <div class="flex justify-between items-center p-4">
+                    <span class="text-xl font-bold">Total:</span>
+                    <span id="cart-total" class="text-xl font-bold">₹0</span>
+                </div>
+                <button id="checkout-btn" class="w-full bg-teal-600 text-white font-bold py-3 px-4 hover:bg-teal-700 transition duration-300">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl text-center relative max-w-sm w-full">
+            <button id="close-payment-btn" class="absolute -top-3 -right-3 bg-red-600 text-white w-8 h-8 rounded-full font-bold text-lg flex items-center justify-center shadow-lg hover:bg-red-700">&times;</button>
+            
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Scan & Pay</h3>
+            <p class="text-gray-700 mb-4">Scan with any UPI App</p>
+            
+            <img id="qr-code-img" src="https://i.imgur.com/gA3tG0r.png" alt="PhonePe QR Code" class="w-full max-w-xs mx-auto rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/400x400/ffffff/333333?text=QR+Code'; this.alt='QR Code Placeholder'">
+            
+            <div class="my-4 text-left w-full max-w-xs mx-auto">
+                <p class="text-gray-900 font-bold text-lg flex justify-between">
+                    <span>Total:</span>
+                    <span id="payment-total" class="text-purple-700">₹0</span>
+                </p>
+                <p class="text-gray-900 font-bold text-lg flex justify-between">
+                    <span>Your Token:</span>
+                    <span id="payment-token" class="text-red-600">#---</span>
+                </p>
+            </div>
+            
+            <div class="mt-4 p-3 bg-blue-100 border border-blue-300 rounded-lg">
+                <p class="text-sm text-blue-800 font-semibold">
+                    Please take a screenshot of this page (with your Token) for your records.
+                </p>
+            </div>
+
+            <div class="mt-4 p-3 bg-green-100 border border-green-300 rounded-lg">
+                <p class="text-sm text-green-800 font-semibold">
+                    After paying, please send a screenshot of this page to:
+                </p>
+                <p class="text-lg text-green-900 font-bold">
+                    +91 6303870208
+                </p>
+            </div>
+
+            <button id="back-to-cart-btn" class="w-full mt-4 bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300">
+                &larr; Back to Cart
+            </button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. DEFINE MENU DATA ---
+            const menuData = {
+                "Appetizers": [
+                    { name: "Chicken Cheese Balls", price: 130 },
+                    { name: "Paneer Manchuria", price: 120 },
+                    { name: "Veg Manchuria", price: 120 },
+                    { name: "Chicken 65", price: 120 },
+                    { name: "Chilli Chicken", price: 120 },
+                    { name: "Chicken Manchuria", price: 120 },
+                    { name: "Chicken hot pepper", price: 120 },
+                    { name: "Chilly Paneer", price: 120 },
+                    { name: "Paneer 65", price: 120 },
+                    { name: "Chicken Popcorn", price: 110 },
+                    { name: "Veg Cheese Balls", price: 95 },
+                    { name: "Chicken Nuggets (5pcs)", price: 95 },
+                    { name: "Chicken Bites", price: 95 },
+                    { name: "Chicken Finger", price: 95 },
+                    { name: "Chicken Cheeseball", price: 95 }
+                ],
+                "Momos (6Pcs)": [
+                    { name: "Chicken Fried Momos", price: 110 },
+                    { name: "Veg Fried Momo", price: 95 },
+                    { name: "Cheese Extra", price: 15 }
+                ],
+                "Biryani": [
+                    { name: "Special Chicken Lollipop Biryani", price: 149 },
+                    { name: "Yummpyps Special Chicken Biryani", price: 130 },
+                    { name: "Hyderabai Chicken Dum Biryani", price: 130 }
+                ],
+                "Rice Bowls": [
+                    { name: "Paneer Butter Masala Rice Bowl", price: 130 },
+                    { name: "Chicken Makhani Rice Bowl", price: 130 },
+                    { name: "Chicken Kadai Rice Bowl", price: 130 },
+                    { name: "Chicken Tandoori Rice Bowl", price: 130 },
+                    { name: "Chicken Chettinad Rice Bowl", price: 130 },
+                    { name: "Chicken Tikka Rice Bowl", price: 130 },
+                    { name: "Paneer Tikka Rice Bowl", price: 125 },
+                    { name: "Paneer Chettinad Rice Bowl", price: 125 },
+                    { name: "Paneer Makhani Rice Bowl", price: 110 },
+                    { name: "Paneer Kadai Rice Bowl", price: 110 },
+                    { name: "Paneer Tandoori Rice Bowl", price: 110 }
+                ],
+                "Fried Rice": [
+                    { name: "Chicken Schezwan Fried Rice", price: 99 },
+                    { name: "Veg Mushroom Fried Rice", price: 90 },
+                    { name: "Veg Schezwan Fried Rice", price: 90 },
+                    { name: "Paneer Fried Rice", price: 90 },
+                    { name: "Chicken Fried Rice", price: 90 },
+                    { name: "Double Egg Fried Rice", price: 85 },
+                    { name: "Egg Fried Rice", price: 80 },
+                    { name: "Vegetable Fried Rice", price: 70 }
+                ],
+                "Noodles": [
+                    { name: "Chicken Schezwan Noodles", price: 99 },
+                    { name: "Double Egg Noodles", price: 90 },
+                    { name: "Chicken Noodles", price: 90 },
+                    { name: "Egg Noodles", price: 80 },
+                    { name: "Vegetable Noodles", price: 70 }
+                ],
+                "Rolls": [
+                    { name: "Chicken Tikka Roll", price: 99 },
+                    { name: "Chicken Chettinad Roll", price: 99 },
+                    { name: "Chicken Makhani Roll", price: 90 },
+                    { name: "Chicken Kadai Roll", price: 90 },
+                    { name: "Chicken Tandoori Roll", price: 90 },
+                    { name: "Paneer Tikka Roll", price: 90 },
+                    { name: "Paneer Chettinad Roll", price: 75 },
+                    { name: "Paneer Kadai Roll", price: 75 },
+                    { name: "Paneer Makhani Roll", price: 75 },
+                    { name: "Paneer Tandoori Roll", price: 75 }
+                ],
+                "Parathas": [
+                    { name: "Paneer-2", price: 125 },
+                    { name: "Aloo-2", price: 85 },
+                    { name: "Paneer Paratha", price: 65 },
+                    { name: "Aloo Paratha", price: 45 }
+                ],
+                "Omlettes": [
+                    { name: "Chicken Cheese Omlette", price: 95 },
+                    { name: "Cheese Omlette", price: 70 },
+                    { name: "Bread Omlette", price: 55 },
+                    { name: "Masala Omlette", price: 45 },
+                    { name: "Extra Egg", price: 12 }
+                ],
+                "Sandwich": [
+                    { name: "Chicken Tikka Sandwich", price: 99 },
+                    { name: "Chicken Makhani Sandwich", price: 99 },
+                    { name: "Chicken Tandoori Sandwich", price: 99 },
+                    { name: "Paneer Tikka Sandwich", price: 90 },
+                    { name: "Paneer Makhani Sandwich", price: 90 },
+                    { name: "Paneer Tandoori Sandwich", price: 90 },
+                    { name: "Chicken Sandwich", price: 80 },
+                    { name: "Veg Grilled Sandwich", price: 70 },
+                    { name: "Paneer Sandwich", price: 70 },
+                    { name: "Colslov Sandwich", price: 40 },
+                    { name: "Cheese Extra.", price: 20 }
+                ],
+                "Fries": [
+                    { name: "Butter Garlic Fries", price: 99 },
+                    { name: "Peri Peri Fries", price: 85 },
+                    { name: "Masala Fries", price: 80 },
+                    { name: "French Fries", price: 65 }
+                ],
+                "Speciality Wet Maggi": [
+                    { name: "Paneer Tandoori", price: 90 },
+                    { name: "Chicken Chettinad", price: 90 },
+                    { name: "Paneer Tikka", price: 80 },
+                    { name: "Paneer Chettinad", price: 80 },
+                    { name: "Chicken Tikka", price: 80 },
+                    { name: "Chicken Makhani", price: 80 },
+                    { name: "Chicken Tandoori", price: 80 },
+                    { name: "Paneer Makhani", price: 70 },
+                    { name: "Paneer Kadai", price: 70 }
+                ],
+                "Fried Maggi": [
+                    { name: "Chicken Fried Maggi", price: 75 },
+                    { name: "Paneer Fried Maggi", price: 65 },
+                    { name: "Egg Fried Maggi", price: 60 },
+                    { name: "Vegetable Fried Maggi", price: 55 }
+                ],
+                "Boil Maggi": [
+                    { name: "Egg Cheese Boil Maggi", price: 70 },
+                    { name: "Egg Butter Boil Maggi", price: 70 },
+                    { name: "Cheese Boil Maggi", price: 65 },
+                    { name: "Butter Boil Maggi", price: 65 },
+                    { name: "Double Egg Boil Maggi", price: 60 },
+                    { name: "Vegetable Boil Maggi", price: 60 },
+                    { name: "Egg Boil Maggi", price: 55 },
+                    { name: "Masala Boil Maggi", price: 50 },
+                    { name: "Classic Boil Maggi", price: 40 }
+                ],
+                "Beverages": [
+                    { name: "Monster Can", price: 125 },
+                    { name: "Predator Can", price: 60 },
+                    { name: "Diet Coke", price: 40 },
+                    { name: "Thums Up", price: 25 },
+                    { name: "Fountain Drink", price: 25 }
+                ],
+                "Extra": [
+                    { name: "White Rice", price: 40 },
+                    { name: "Extra Chicken", price: 30 },
+                    { name: "Extra Paneer", price: 30 },
+                    { name: "Extra Butter", price: 20 },
+                    { name: "Extra Cheese", price: 20 },
+                    { name: "Extra Egg", price: 15 },
+                    { name: "Parcel Charge", price: 5 }
+                ],
+                "Ice Cream": [
+                    { name: "Aamchi", price: 135 }
+                ]
+            };
+
+            // --- 2. STATE & DOM ELEMENTS ---
+            let cart = []; // Array to store cart items
+            let currentToken = 1; // Reset to 1. Tracks the order token number
+            const menuContainer = document.getElementById('menu-container');
+            const cartModal = document.getElementById('cart-modal');
+            const closeCartBtn = document.getElementById('close-cart-btn');
+            const cartIconBtn = document.getElementById('cart-icon-btn');
+            const cartItemsList = document.getElementById('cart-items-list');
+            const cartTotalEl = document.getElementById('cart-total');
+            const cartCountEl = document.getElementById('cart-count');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            // Payment Modal elements
+            const paymentModal = document.getElementById('payment-modal');
+            const closePaymentBtn = document.getElementById('close-payment-btn');
+            const paymentTotalEl = document.getElementById('payment-total');
+            const qrCodeImg = document.getElementById('qr-code-img');
+            const backToCartBtn = document.getElementById('back-to-cart-btn'); // NEW: Get the "Back to Cart" button
+            // We get the token element inside the function
+
+            // Gemini elements
+            const geminiAdvisorSection = document.getElementById('gemini-advisor');
+            const geminiBtn = document.getElementById('gemini-btn');
+            const geminiLoading = document.getElementById('gemini-loading');
+            const geminiResponse = document.getElementById('gemini-response');
+
+            // --- 3. FUNCTIONS ---
+
+            /**
+             * Fetches a response from the Gemini API with exponential backoff.
+             */
+            async function fetchWithRetry(apiUrl, payload, retries = 3, delay = 1000) {
+                for (let i = 0; i < retries; i++) {
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (response.ok) {
+                            return await response.json();
+                        } else {
+                            if (response.status !== 429) {
+                                console.error(`API request failed with status ${response.status}:`, await response.text());
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Network error during API request:", error);
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+                }
+                throw new Error("API request failed after multiple retries.");
+            }
+
+            /**
+             * Calls the Gemini API to get a creative response.
+             */
+            async function callGeminiApi(userQuery, systemPrompt) {
+                const apiKey = "AIzaSyDeSi-qd7WgJKd0nOvI6x7CjIigIsqGfKo"; // Your API key
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
+                };
+
+                try {
+                    const result = await fetchWithRetry(apiUrl, payload);
+                    const candidate = result.candidates?.[0];
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        return candidate.content.parts[0].text;
+                    } else {
+                        console.error("Gemini API returned no content:", result);
+                        return "The Advisor is speechless. Maybe your order is too powerful?";
+                    }
+                } catch (error)
+                 {
+                    console.error("Error calling Gemini API:", error);
+                    return "The Advisor is on a break. Try again in a moment.";
+                }
+            }
+
+            /**
+             * Handles the click event for the Gemini Advisor button.
+             */
+            async function handleGeminiClick() {
+                geminiLoading.classList.remove('hidden');
+                geminiResponse.classList.add('hidden');
+                geminiBtn.disabled = true;
+
+                const itemNames = cart.map(item => item.name).join(', ');
+                
+                if (!itemNames) {
+                    geminiLoading.classList.add('hidden');
+                    geminiBtn.disabled = false;
+                    return;
+                }
+
+                const systemPrompt = "Act as a funny, quirky 'Bakchodi Advisor' for a restaurant called 'yummpys pe bakchodi'.";
+                const userQuery = `A customer has these items in their cart: ${itemNames}. Write a short, single-paragraph comment (2-3 sentences) about their order. It could be a roast, a compliment, or a weirdly funny suggestion. Keep it in the 'bakchodi' (fun, mischievous) spirit.`;
+
+                const responseText = await callGeminiApi(userQuery, systemPrompt);
+
+                geminiResponse.textContent = responseText;
+                geminiResponse.classList.remove('hidden');
+                geminiLoading.classList.add('hidden');
+                geminiBtn.disabled = false;
+            }
+
+
+            /**
+             * Renders all menu categories and items onto the page
+             */
+            function renderMenu() {
+                let html = '';
+                for (const category in menuData) {
+                    html += `
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-teal-900/50">
+                            <h3 class="text-2xl font-bold mb-4 text-teal-400">${category}</h3>
+                            <ul class="space-y-4">
+                    `;
+                    
+                    menuData[category].forEach(item => {
+                        html += `
+                            <li class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-lg font-semibold">${item.name}</p>
+                                    <p class="text-md text-gray-400">₹${item.price}</p>
+                                </div>
+                                <button class="add-to-cart-btn bg-teal-600 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-teal-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50"
+                                    data-name="${item.name}" data-price="${item.price}">
+                                    Add
+                                </button>
+                            </li>
+                        `;
+                    });
+
+                    html += `</ul></div>`;
+                }
+                menuContainer.innerHTML = html;
+            }
+
+            /**
+             * Adds an item to the cart or increments its quantity
+             */
+            function addToCart(name, price) {
+                const existingItem = cart.find(item => item.name === name);
+                
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ name, price, quantity: 1 });
+                }
+                updateCartDisplay();
+            }
+
+            /**
+             * Changes the quantity of an item in the cart
+             */
+            function changeQuantity(name, change) {
+                const item = cart.find(item => item.name === name);
+                
+                if (item) {
+                    item.quantity += change;
+                    if (item.quantity <= 0) {
+                        // Remove item if quantity is 0 or less
+                        cart = cart.filter(cartItem => cartItem.name !== name);
+                    }
+                }
+                updateCartDisplay();
+            }
+
+            /**
+             * Updates the cart modal UI (items, total, count)
+             */
+            function updateCartDisplay() {
+                // Clear current list
+                cartItemsList.innerHTML = '';
+                
+                let total = 0;
+                let totalItems = 0;
+
+                if (cart.length === 0) {
+                    cartItemsList.innerHTML = '<p class="text-gray-400 text-center">Your cart is empty. Add some bakchodi!</p>';
+                    geminiAdvisorSection.classList.add('hidden'); // Hide Gemini section if cart is empty
+                    geminiResponse.classList.add('hidden');
+                } else {
+                    geminiAdvisorSection.classList.remove('hidden'); // Show Gemini section if cart has items
+                    cart.forEach(item => {
+                        const itemTotal = item.price * item.quantity;
+                        total += itemTotal;
+                        totalItems += item.quantity;
+
+                        cartItemsList.innerHTML += `
+                            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-700">
+                                <div>
+                                    <h4 class="font-semibold">${item.name}</h4>
+                                    <p class="text-sm text-gray-400">₹${item.price}</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="changeQuantity('${item.name}', -1)" class="px-2 py-0.5 bg-gray-600 text-white rounded-md font-bold hover:bg-gray-500">-</button>
+                                    <span class="w-6 text-center">${item.quantity}</span>
+                                    <button onclick="changeQuantity('${item.name}', 1)" class="px-2 py-0.5 bg-gray-600 text-white rounded-md font-bold hover:bg-gray-500">+</button>
+                                </div>
+                                <span class="font-semibold">₹${itemTotal}</span>
+                            </div>
+                        `;
+                    });
+                }
+                
+                // Update total price and item count badge
+                cartTotalEl.textContent = `₹${total}`;
+                paymentTotalEl.textContent = `₹${total}`; // Update payment modal total
+                cartCountEl.textContent = totalItems;
+                cartCountEl.classList.toggle('hidden', totalItems === 0);
+            }
+
+            /**
+             * Toggles the cart modal visibility by adding/removing the 'open' class
+             */
+            function toggleCartModal() {
+                cartModal.classList.toggle('open');
+            }
+
+            /**
+             * --- SHOW PAYMENT MODAL - MODIFIED ---
+             * Shows the payment modal, generates a token, and hides the cart modal
+             */
+            function showPaymentModal() {
+                if (cart.length === 0) {
+                    return; 
+                }
+
+                // 1. Generate Token
+                const token = currentToken; // Use the sequential token
+                currentToken++; // Increment for the next order
+                
+                // 2. Display Token
+                document.getElementById('payment-token').textContent = `#${token}`;
+
+                // 3. Set QR code
+                qrCodeImg.src = "https://i.imgur.com/gA3tG0r.png"; 
+                
+                // 4. Show/Hide Modals
+                cartModal.classList.remove('open'); // Close the cart modal
+                paymentModal.classList.remove('hidden');
+            }
+
+            /**
+             * --- HIDE PAYMENT MODAL - MODIFIED ---
+             * Hides the payment modal and clears the cart
+             */
+            function hidePaymentModal() {
+                paymentModal.classList.add('hidden');
+                
+                // 1. Clear the cart
+                cart = []; 
+                
+                // 2. Update the (now empty) cart display
+                updateCartDisplay(); 
+                
+                // 3. Reset the token text for next time
+                document.getElementById('payment-token').textContent = "#---";
+            }
+
+            // NEW: Function to go from payment back to cart without clearing
+            /**
+             * Hides the payment modal and re-opens the cart modal without clearing cart.
+             */
+            function showCartFromPayment() {
+                paymentModal.classList.add('hidden');
+                cartModal.classList.add('open');
+            }
+
+
+            // --- 4. EVENT LISTENERS ---
+
+            // Render the menu when the page loads
+            renderMenu();
+
+            // Open/Close cart modal
+            cartIconBtn.addEventListener('click', toggleCartModal);
+            closeCartBtn.addEventListener('click', toggleCartModal);
+            
+            // Checkout and Payment Modal listeners
+            checkoutBtn.addEventListener('click', showPaymentModal);
+            closePaymentBtn.addEventListener('click', hidePaymentModal);
+            backToCartBtn.addEventListener('click', showCartFromPayment); // NEW: Add listener for the back button
+
+            // Gemini button listener
+            geminiBtn.addEventListener('click', handleGeminiClick);
+            
+            // Event delegation for "Add to Cart" buttons
+            menuContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('add-to-cart-btn')) {
+                    const name = e.target.dataset.name;
+                    const price = parseFloat(e.target.dataset.price);
+                    addToCart(name, price);
+                    
+                    // Button feedback
+                    e.target.textContent = 'Added!';
+                    e.target.classList.add('bg-green-600');
+                    setTimeout(() => {
+                        e.target.textContent = 'Add';
+                        e.target.classList.remove('bg-green-600');
+                    }, 1000);
+                }
+            });
+
+            // Make quantity functions globally accessible for inline onclick
+            window.changeQuantity = changeQuantity;
+
+        });
+    </script>
+</body>
+</html>
